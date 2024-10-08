@@ -6,8 +6,9 @@ import seaborn as sns
 # Название 
 # Описание 
 st.title('Data analisys applicaion')
-st.write('Загрузи свой датафрейм и заполни пропуски') 
-st.write('Новая строка')
+st.write('Загрузи свой датасет')
+ 
+
 
 
 # ## Шаг 1. Загрузка CSV файла
@@ -22,37 +23,38 @@ else:
     st.stop()
 
 
-# ## Шаг 2. Проверка наличия пропусков в файле
+## Шаг 2. Проверка наличия пропусков в файле
 
-# missed_values = df.isna().sum()
-# missed_values = missed_values[missed_values > 0]
+missed_values = df.isna().sum()
+missed_values = missed_values[missed_values > 0]
 
-# if len(missed_values) > 0:
-#     fig, ax = plt.subplots()
-#     sns.barplot(x=missed_values.index, y=missed_values.values)
-#     ax.set_title('Пропуски в столбцах')
-#     ax.set_ylabel('Количество пропусков')
-#     st.pyplot(fig)
+if len(missed_values) > 0:
+    # fig, ax = plt.subplots()
+    # sns.barplot(x=missed_values.index, y=missed_values.values, color='purple')
+    # ax.set_title('Пропуски в столбцах')
+    # ax.set_ylabel('Количество пропусков')
+    # ax.set_xlabel('Название столбцов')
+    st.bar_chart(missed_values, x_label='Количество пропусков', y_label='Название столбцов', color='#ffaa0088', horizontal=True)
 
-# ## Шаг 3. Заполнить пропуски
-#     button = st.button('Заполнить пропуски')
-#     if button:
-#         df_filled = df[missed_values.index].copy()
+## Шаг 3. Заполнить пропуски
+    button = st.sidebar.button('Заполнить пропуски')
+    if button:
+        df_filled = df[missed_values.index].copy()
 
-#         for col in df_filled.columns:
-#             if df_filled[col].dtype == 'object': # Категориальные признаки
-#                 df_filled[col] = df_filled[col].fillna(df_filled[col].mode()[0])
-#             else: # Численные признаки
-#                 df_filled[col] = df_filled[col].fillna(df_filled[col].median())
+        for col in df_filled.columns:
+            if df_filled[col].dtype == 'object': # Категориальные признаки
+                df_filled[col] = df_filled[col].fillna(df_filled[col].mode()[0])
+            else: # Численные признаки
+                df_filled[col] = df_filled[col].fillna(df_filled[col].median())
 
-#         st.write(df_filled.head(5))
+        st.write(df_filled.head(5))
 
-# ## Шаг 4. Выгрузить заполнный от прпусков CSV файл
+## Шаг 4. Выгрузить заполнный от прпусков CSV файл
 
-#         download_button = st.download_button(label='Скачать CSV файл', 
-#                    data=df_filled.to_csv(), 
-#                    file_name='filled_fate.csv')
+        download_button = st.sidebar.download_button(label='Скачать CSV файл', 
+                   data=df_filled.to_csv(), 
+                   file_name='filled_dataf.csv')
         
-# else:
-#     st.write('Нет пропусков в данных')
-#     st.stop()
+else:
+    st.write('Нет пропусков в данных')
+    st.stop()
